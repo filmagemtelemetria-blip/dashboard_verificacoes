@@ -20,17 +20,14 @@
         }
 
         [data-theme="dark"] {
-            --primary: #20c997; --primary-hover: #12b886;
-            --bg-color: #121212; --surface: #1e1e1e;
-            --text-main: #e2e8f0; --text-muted: #a0aec0;
-            --border: #2d4a43; --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-            --red: #fc8181; --red-bg: rgba(252, 129, 129, 0.15);
-            --yellow: #f6e05e; --yellow-bg: rgba(246, 224, 94, 0.15);
+            --primary: #20c997; --primary-hover: #12b886; --bg-color: #121212; --surface: #1e1e1e;
+            --text-main: #e2e8f0; --text-muted: #a0aec0; --border: #2d4a43; --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            --red: #fc8181; --red-bg: rgba(252, 129, 129, 0.15); --yellow: #f6e05e; --yellow-bg: rgba(246, 224, 94, 0.15);
             --green: #4eff7e;
         }
 
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
-        body { background: var(--bg-color); color: var(--text-main); padding: 15px; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; overflow-y: auto; }
+        body { background: var(--bg-color); color: var(--text-main); padding: 15px; min-height: 100vh; display: flex; flex-direction: column; }
         .container { width: 100%; display: flex; flex-direction: column; gap: 15px; flex: 1; }
         .elvis-sig { position:fixed; bottom:15px; right:15px; font-size:10px; color:var(--primary); opacity:0.7; font-weight:800; pointer-events:none; z-index:9998; }
         
@@ -47,24 +44,34 @@
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(78,255,126,0.6); } 70% { box-shadow: 0 0 0 6px rgba(78,255,126,0); } 100% { box-shadow: 0 0 0 0 rgba(78,255,126,0); } }
 
         .top-panel { display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
-        .f-wrapper { display: flex; flex-direction: column; gap: 12px; background: var(--surface); padding: 15px; border-radius: 12px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+        .f-wrapper { display: flex; flex-direction: column; gap: 12px; background: var(--surface); padding: 15px; border-radius: 12px; box-shadow: var(--shadow); border: 1px solid var(--border); z-index: 10; }
         .quick-filters { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-        .btn-quick { background: var(--bg-color); border: 1px solid var(--border); color: var(--primary); padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; transition: var(--transition); }
+        .btn-quick { background: var(--bg-color); border: 1px solid var(--border); color: var(--primary); padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 4px; }
         .btn-quick.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 4px 10px rgba(20, 123, 106, 0.3); }
         .btn-quick:hover:not(.active) { background: rgba(20, 123, 106, 0.05); border-color: var(--primary); }
         
         .btn-export { background: #3182ce; color: #fff; border: none; padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(49, 130, 206, 0.3); }
         .btn-export:hover { transform: translateY(-2px); }
 
+        /* CAIXAS DE FILTRO COM CHECKBOXES (MULTI-SELECT) */
         .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
-        .f-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; display: flex; align-items: center; }
-        .f-card label { background: var(--primary); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; padding: 8px 12px; flex-shrink: 0; }
-        .f-card select { width: 100%; padding: 8px 10px; border: none; font-size: 12px; outline: none; color: var(--text-main); background: transparent; cursor: pointer; font-weight: 600; }
+        .f-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; position: relative; }
+        .f-card label { background: var(--primary); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; padding: 8px 12px; flex-shrink: 0; border-radius: 7px 0 0 7px; height: 100%; }
+        
+        .multi-select { width: 100%; position: relative; }
+        .select-box { padding: 8px 10px; width: 100%; font-size: 11px; color: var(--text-main); font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .select-box::after { content: "▼"; font-size: 8px; color: var(--text-muted); margin-left: 5px; }
+        .dropdown-content { display: none; position: absolute; top: 110%; left: 0; width: max-content; min-width: 100%; background: var(--surface); border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.15); border-radius: 8px; z-index: 100; max-height: 250px; overflow-y: auto; overflow-x: hidden; }
+        .dropdown-actions { display: flex; justify-content: space-between; gap: 5px; padding: 8px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--surface); z-index: 2; }
+        .btn-dd { flex: 1; background: var(--primary); color: white; border: none; padding: 6px; border-radius: 4px; font-size: 10px; font-weight: 700; cursor: pointer; text-align: center; }
+        .btn-dd.clear { background: var(--text-muted); }
+        .option-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 11px; font-weight: 600; color: var(--text-main); cursor: pointer; border-bottom: 1px solid #f0f4f4; transition: var(--transition); }
+        .option-item:hover { background: rgba(20, 123, 106, 0.05); }
+        .option-item input[type="checkbox"] { accent-color: var(--primary); cursor: pointer; width: 14px; height: 14px; }
 
         .section-title { font-size: 13px; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 6px; text-transform: uppercase; margin-bottom: 8px; margin-top: 5px;}
         
         .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
-        
         .k-card { background: var(--surface); border-radius: 8px; box-shadow: var(--shadow); padding: 15px; display: flex; flex-direction: column; justify-content: center; border-left: 4px solid var(--primary); transition: transform 0.2s; border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); gap: 6px; }
         .k-card.red-border { border-left-color: var(--red); }
         .k-card.yellow-border { border-left-color: var(--yellow); }
@@ -77,7 +84,7 @@
         .k-value.warning { color: var(--yellow); }
         .k-value.success { color: var(--green); }
 
-        .donut-box { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: var(--surface); border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+        .donut-box { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: var(--surface); border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--shadow); margin-bottom: 15px;}
         .donut-title { font-size: 12px; font-weight: 800; color: var(--primary); margin-bottom: 15px; text-transform: uppercase; text-align: center; }
         .donut-container { position: relative; width: 110px; height: 110px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
         .donut-inner { width: 75px; height: 75px; background: var(--surface); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; color: var(--text-main); }
@@ -85,7 +92,7 @@
         .legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 
         .grid-master { display: grid; grid-template-columns: 1fr; gap: 15px; align-items: start; }
-        @media (min-width: 1024px) { .grid-master { grid-template-columns: 1.5fr 1fr; } }
+        @media (min-width: 1024px) { .grid-master { grid-template-columns: 1.6fr 1fr; } }
         
         .col-left { display: flex; flex-direction: column; gap: 15px; }
         .col-right { display: flex; flex-direction: column; gap: 15px; }
@@ -93,11 +100,12 @@
         .box { background: var(--surface); border-radius: 12px; box-shadow: var(--shadow); border: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
         .b-header { padding: 15px; font-size: 13px; font-weight: 800; color: var(--primary); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; text-transform: uppercase; background: rgba(20, 123, 106, 0.03); }
         
-        .scroll { overflow-y: auto; overflow-x: auto; max-height: 400px; }
+        .scroll { overflow-y: auto; overflow-x: auto; max-height: 450px; }
         .scroll-list { overflow-y: auto; max-height: 350px; }
         
-        table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 500px; }
-        th { text-align: left; background: var(--surface); color: var(--text-muted); padding: 12px 10px; position: sticky; top: 0; z-index: 3; text-transform: uppercase; font-size: 10px; font-weight: 800; border-bottom: 2px solid var(--border); white-space: nowrap; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 550px; }
+        th { text-align: left; background: var(--surface); color: var(--text-muted); padding: 12px 10px; position: sticky; top: 0; z-index: 3; text-transform: uppercase; font-size: 10px; font-weight: 800; border-bottom: 2px solid var(--border); white-space: nowrap; cursor: pointer; transition: 0.2s;}
+        th:hover { color: var(--primary); background: #f0f7f6; }
         td { text-align: left; padding: 10px; border-bottom: 1px solid var(--border); color: var(--text-main); }
         tbody tr:hover { background-color: rgba(20, 123, 106, 0.05); }
         tr.sla-critical { background-color: var(--red-bg) !important; }
@@ -123,12 +131,17 @@
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-color); border-radius: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 4px; opacity: 0.5; }
+        
+        @media (max-width: 1024px) {
+            .kpis { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+        }
     </style>
 </head>
 <body>
     <div class="elvis-sig">By Elvis_Tech</div>
     
     <div class="container">
+        <!-- HEADER -->
         <header>
             <div class="logo-box"><span class="material-symbols-rounded">fact_check</span> PAINEL OPERACIONAL</div>
             <h1>RCR FROTA</h1>
@@ -140,14 +153,19 @@
             </div>
         </header>
 
+        <!-- FILTROS COM CAIXAS DE SELEÇÃO E PERÍODO -->
         <div class="top-panel">
             <div class="f-wrapper">
                 <div class="quick-filters">
-                    <button class="btn-quick active" onclick="setQuickFilter('tudo', this)">Total (Tudo)</button>
+                    <button class="btn-quick active" id="btn-quick-tudo" onclick="setQuickFilter('tudo', this)">Total (Tudo)</button>
                     <button class="btn-quick" onclick="setQuickFilter('0', this)">Hoje</button>
                     <button class="btn-quick" onclick="setQuickFilter('1', this)">Ontem</button>
                     <button class="btn-quick" onclick="setQuickFilter('7', this)">Últimos 7 Dias</button>
                     <button class="btn-quick" onclick="setQuickFilter('30', this)">Este Mês</button>
+                    
+                    <button class="btn-quick" onclick="limparFiltrosGerais()" style="background: var(--red); color: #fff; border-color: var(--red); margin-left: 10px;">
+                        <span class="material-symbols-rounded" style="font-size: 16px;">filter_alt_off</span> Limpar Filtros
+                    </button>
                     
                     <button class="btn-export" style="margin-left: auto;" onclick="exportarCSV()">
                         <span class="material-symbols-rounded" style="font-size: 16px;">download</span> Exportar CSV
@@ -156,38 +174,123 @@
                         <span class="material-symbols-rounded" style="font-size: 16px;">picture_as_pdf</span> Exportar PDF
                     </button>
                 </div>
+                
                 <div class="filters">
-                    <div class="f-card"><label><span class="material-symbols-rounded">calendar_month</span> Mês</label><select id="filter-mes"><option value="Tudo">Tudo</option></select></div>
-                    <div class="f-card"><label><span class="material-symbols-rounded">badge</span> Inspetor</label><select id="filter-inspetor"><option value="Tudo">Tudo</option></select></div>
-                    <div class="f-card"><label><span class="material-symbols-rounded">store</span> Filial</label><select id="filter-filial"><option value="Tudo">Tudo</option></select></div>
-                    <div class="f-card"><label><span class="material-symbols-rounded">directions_car</span> Veículo</label><select id="filter-veiculo"><option value="Tudo">Tudo</option></select></div>
-                    <div class="f-card"><label><span class="material-symbols-rounded">report_problem</span> Falhas</label><select id="filter-falha"><option value="Tudo">Tudo</option></select></div>
-                    <div class="f-card"><label><span class="material-symbols-rounded">rule</span> Status</label><select id="filter-status"><option value="Tudo">Tudo</option></select></div>
+                    <!-- Filtro Calendário -->
+                    <div class="f-card" style="grid-column: span 2;">
+                        <label><span class="material-symbols-rounded">date_range</span> Período</label>
+                        <div style="display:flex; align-items:center; width:100%; padding: 0 10px; gap: 5px;">
+                            <input type="date" id="filter-dtIni" onchange="resetQuickFiltersAndUpdate()" style="border:none; outline:none; background:transparent; font-size:11px; width:100%; color: var(--text-main); font-family: 'Inter', sans-serif; font-weight:600;">
+                            <span style="font-size:10px; color:var(--text-muted); font-weight:700;">ATÉ</span>
+                            <input type="date" id="filter-dtFim" onchange="resetQuickFiltersAndUpdate()" style="border:none; outline:none; background:transparent; font-size:11px; width:100%; color: var(--text-main); font-family: 'Inter', sans-serif; font-weight:600;">
+                        </div>
+                    </div>
+                    
+                    <!-- Filtros Multi-Select -->
+                    <div class="f-card">
+                        <label><span class="material-symbols-rounded">calendar_month</span> Mês</label>
+                        <div class="multi-select" id="ms-mes">
+                            <div class="select-box" id="text-mes" onclick="toggleDD('dd-mes')">Todos</div>
+                            <div class="dropdown-content" id="dd-mes">
+                                <div class="dropdown-actions">
+                                    <button class="btn-dd" onclick="selectAll('mes')">Todos</button>
+                                    <button class="btn-dd clear" onclick="clearAll('mes')">Limpar</button>
+                                </div>
+                                <div id="list-mes"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="f-card">
+                        <label><span class="material-symbols-rounded">badge</span> Inspetor</label>
+                        <div class="multi-select" id="ms-inspetor">
+                            <div class="select-box" id="text-inspetor" onclick="toggleDD('dd-inspetor')">Todos</div>
+                            <div class="dropdown-content" id="dd-inspetor">
+                                <div class="dropdown-actions">
+                                    <button class="btn-dd" onclick="selectAll('inspetor')">Todos</button>
+                                    <button class="btn-dd clear" onclick="clearAll('inspetor')">Limpar</button>
+                                </div>
+                                <div id="list-inspetor"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="f-card">
+                        <label><span class="material-symbols-rounded">store</span> Filial</label>
+                        <div class="multi-select" id="ms-filial">
+                            <div class="select-box" id="text-filial" onclick="toggleDD('dd-filial')">Todos</div>
+                            <div class="dropdown-content" id="dd-filial">
+                                <div class="dropdown-actions">
+                                    <button class="btn-dd" onclick="selectAll('filial')">Todos</button>
+                                    <button class="btn-dd clear" onclick="clearAll('filial')">Limpar</button>
+                                </div>
+                                <div id="list-filial"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="f-card">
+                        <label><span class="material-symbols-rounded">directions_car</span> Veículo</label>
+                        <div class="multi-select" id="ms-veiculo">
+                            <div class="select-box" id="text-veiculo" onclick="toggleDD('dd-veiculo')">Todos</div>
+                            <div class="dropdown-content" id="dd-veiculo">
+                                <div class="dropdown-actions">
+                                    <button class="btn-dd" onclick="selectAll('veiculo')">Todos</button>
+                                    <button class="btn-dd clear" onclick="clearAll('veiculo')">Limpar</button>
+                                </div>
+                                <div id="list-veiculo"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="f-card">
+                        <label><span class="material-symbols-rounded">report_problem</span> Falhas</label>
+                        <div class="multi-select" id="ms-falhas">
+                            <div class="select-box" id="text-falhas" onclick="toggleDD('dd-falhas')">Todos</div>
+                            <div class="dropdown-content" id="dd-falhas">
+                                <div class="dropdown-actions">
+                                    <button class="btn-dd" onclick="selectAll('falhas')">Todos</button>
+                                    <button class="btn-dd clear" onclick="clearAll('falhas')">Limpar</button>
+                                </div>
+                                <div id="list-falhas"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="f-card">
+                        <label><span class="material-symbols-rounded">rule</span> Status</label>
+                        <div class="multi-select" id="ms-status">
+                            <div class="select-box" id="text-status" onclick="toggleDD('dd-status')">Todos</div>
+                            <div class="dropdown-content" id="dd-status">
+                                <div class="dropdown-actions">
+                                    <button class="btn-dd" onclick="selectAll('status')">Todos</button>
+                                    <button class="btn-dd clear" onclick="clearAll('status')">Limpar</button>
+                                </div>
+                                <div id="list-status"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
+            <!-- KPIS PRINCIPAIS -->
             <div>
                 <div class="section-title"><span class="material-symbols-rounded" style="font-size:18px;">trending_up</span> OPERAÇÃO (FILTRO ATIVO)</div>
-                <div class="kpis">
+                <div class="kpis" style="grid-template-columns: repeat(5, 1fr);">
                     <div class="k-card">
-                        <div class="k-header"><span class="material-symbols-rounded" style="color: var(--primary);">fact_check</span> VERIFICAÇÕES</div>
                         <div class="k-value" id="kpi-total">0</div>
+                        <div class="k-header"><span class="material-symbols-rounded" style="color: var(--primary);">fact_check</span> VERIFICAÇÕES</div>
                     </div>
                     <div class="k-card" style="border-left-color: var(--primary-hover);">
-                        <div class="k-header"><span class="material-symbols-rounded" style="color: var(--primary-hover);">directions_car</span> VEÍCULOS ÚNICOS</div>
                         <div class="k-value" style="color: var(--primary-hover);" id="kpi-veiculos-unicos">0</div>
+                        <div class="k-header"><span class="material-symbols-rounded" style="color: var(--primary-hover);">directions_car</span> VEÍCULOS ÚNICOS</div>
                     </div>
                     <div class="k-card green-border">
-                        <div class="k-header"><span class="material-symbols-rounded" style="color: var(--green);">check_circle</span> CONFORMES</div>
                         <div class="k-value success" id="kpi-conformes">0</div>
+                        <div class="k-header"><span class="material-symbols-rounded" style="color: var(--green);">check_circle</span> CONFORMES</div>
                     </div>
                     <div class="k-card red-border">
-                        <div class="k-header"><span class="material-symbols-rounded" style="color: var(--red);">warning</span> COM ANOMALIA</div>
                         <div class="k-value danger" id="kpi-anomalias">0</div>
+                        <div class="k-header"><span class="material-symbols-rounded" style="color: var(--red);">warning</span> COM ANOMALIA</div>
                     </div>
                     <div class="k-card yellow-border">
-                        <div class="k-header"><span class="material-symbols-rounded" style="color: var(--yellow);">build_circle</span> RESOLVIDAS LOCAL</div>
                         <div class="k-value warning" id="kpi-resolvidas">0</div>
+                        <div class="k-header"><span class="material-symbols-rounded" style="color: var(--yellow);">build_circle</span> RESOLVIDAS LOCAL</div>
                     </div>
                 </div>
             </div>
@@ -196,18 +299,23 @@
         <div class="grid-master">
             <div class="col-left">
                 <div class="box">
-                    <div class="b-header"><span class="material-symbols-rounded">list_alt</span> LOG DE INSPEÇÕES RECENTES</div>
+                    <div class="b-header"><span class="material-symbols-rounded">list_alt</span> VERIFICAÇÕES</div>
                     <div class="scroll">
                         <table>
                             <thead>
                                 <tr>
-                                    <th onclick="toggleSort('dataISO')">Data ⇅</th>
-                                    <th>Inspetor</th><th>Veículo</th><th>Filial</th>
-                                    <th>Principais Falhas</th><th>Status</th>
+                                    <!-- ORDENAÇÃO DECRESCENTE POR PADRÃO (dateTimeISO) -->
+                                    <th onclick="toggleSort('dateTimeISO')" style="width: 90px;">Data ⇅</th>
+                                    <th onclick="toggleSort('dateTimeISO')" style="width: 70px;">Hora ⇅</th>
+                                    <th>Inspetor</th>
+                                    <th>Veículo</th>
+                                    <th>Filial</th>
+                                    <th>Principais Falhas</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody id="table-body">
-                                <tr><td colspan="6"><div class="skeleton"></div><div class="skeleton" style="width:70%"></div><div class="skeleton" style="width:85%"></div></td></tr>
+                                <tr><td colspan="7"><div class="skeleton"></div><div class="skeleton" style="width:70%"></div><div class="skeleton" style="width:85%"></div></td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -220,7 +328,8 @@
             </div>
 
             <div class="col-right">
-                <div class="donut-box" style="margin-bottom: 0;">
+                <!-- GRÁFICO DE CONFORMIDADE ISOLADO -->
+                <div class="donut-box">
                     <div class="donut-title">CONFORMIDADE</div>
                     <div class="donut-container" id="donut-conformidade" style="background: conic-gradient(var(--primary) 100%, var(--red) 0);">
                         <div class="donut-inner" id="donut-conformidade-txt">0%</div>
@@ -244,6 +353,7 @@
         </div>
     </div>
 
+    <!-- Modal PDF -->
     <div id="pdfModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; backdrop-filter: blur(2px);">
         <div style="background:var(--surface); padding:24px; border-radius:16px; box-shadow: var(--shadow); width:340px; color:var(--text-main); display:flex; flex-direction:column; gap:16px; border: 1px solid var(--border);">
             <h3 style="font-size:14px; font-weight:800; border-bottom:1px solid var(--border); padding-bottom:12px; display:flex; align-items:center; gap:8px;">
@@ -260,12 +370,24 @@
 
     <script>
         const listaMeses = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
-        let currentDaysLimit = 'tudo', currentSort = { column: 'dataISO', desc: true };
+        
+        // ORDENAÇÃO DECRESCENTE POR PADRÃO VIA DATA+HORA ISO
+        let currentDaysLimit = 'tudo', currentSort = { column: 'dateTimeISO', desc: true }; 
         let inspecaoData = [], currentFilteredData = [];
         let maxTableRows = 100;
+        
+        // Controle de Estado dos Multi-Selects
+        let filterState = { mes: new Set(), inspetor: new Set(), filial: new Set(), veiculo: new Set(), falhas: new Set(), status: new Set() };
 
-        // A SUA URL ORIGINAL QUE FUNCIONOU PERFEITAMENTE
+        // COLOQUE AQUI A SUA URL DA NOVA IMPLANTAÇÃO
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxiGCow9GxPz5fHrS1saelYGetvnebusUR1w1b47vTkPe8SL4YJPsxZqMTNJasnHAT2xg/exec"; 
+
+        // Fecha Dropdowns ao clicar fora
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.multi-select')) {
+                document.querySelectorAll('.dropdown-content').forEach(dd => dd.style.display = 'none');
+            }
+        });
 
         function toggleTheme() {
             const html = document.documentElement;
@@ -294,30 +416,17 @@
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById('sync-time').innerText = 'Baixando...';
+            document.getElementById('sync-time').innerText = 'Conectando...';
             solicitarDadosDoServidor();
-
-            ['filter-mes', 'filter-inspetor', 'filter-filial', 'filter-veiculo', 'filter-falha', 'filter-status'].forEach(id => {
-                document.getElementById(id).addEventListener('change', () => { maxTableRows = 100; updateDashboard(); });
-            });
-            
             setInterval(solicitarDadosDoServidor, 60000);
         });
 
-        // =========================================================================
-        // TÉCNICA JSONP (COM TIMEOUT) PARA BYPASS LOCAL - CÓDIGO INTACTO
-        // =========================================================================
         function solicitarDadosDoServidor() {
             document.getElementById('sync-time').innerText = 'Sincronizando...';
             document.getElementById('live-dot').classList.remove('error');
 
             const callbackName = 'jsonp_' + Date.now();
-            
-            const timeoutId = setTimeout(() => {
-                if (window[callbackName]) {
-                    window[callbackName]({ sucesso: false, erro: "Tempo limite excedido." });
-                }
-            }, 15000);
+            const timeoutId = setTimeout(() => { if (window[callbackName]) window[callbackName]({ sucesso: false, erro: "Tempo esgotado." }); }, 15000);
 
             window[callbackName] = function(data) {
                 clearTimeout(timeoutId);
@@ -330,22 +439,19 @@
                     document.getElementById('sync-time').innerText = new Date().toLocaleTimeString('pt-BR');
                 } else {
                     document.getElementById('live-dot').classList.add('error');
-                    document.getElementById('sync-time').innerText = 'Erro DB';
-                    console.error("Erro interno:", data.erro);
+                    document.getElementById('sync-time').innerText = 'Erro BD';
                 }
             };
 
             const script = document.createElement('script');
             script.id = callbackName;
             script.src = WEB_APP_URL + "?action=get_all_data&callback=" + callbackName;
-            
             script.onerror = function() {
                 clearTimeout(timeoutId);
                 document.getElementById('live-dot').classList.add('error');
                 document.getElementById('sync-time').innerText = 'Offline';
                 delete window[callbackName];
             };
-
             document.body.appendChild(script);
         }
 
@@ -355,10 +461,11 @@
             
             if(vInsp.length > 0) {
                 for(let i=0; i<vInsp.length; i++) {
-                    let r = vInsp[i];
-                    if(r.join("").trim() === "") continue;
+                    let r = vInsp[i]; if(r.join("").trim() === "") continue;
 
                     let dRaw = String(r[0] || '').trim();
+                    let hRaw = String(r[1] || '').trim(); // Pegando a Hora
+                    
                     let dISO = '2026-01-01';
                     let mD = dRaw.match(/(\d{4})-(\d{2})-(\d{2})/); 
                     if(mD) dISO = mD[0];
@@ -366,6 +473,11 @@
                         let mD2 = dRaw.match(/(\d{2})\/(\d{2})\/(\d{4})/); 
                         if(mD2) dISO = `${mD2[3]}-${mD2[2]}-${mD2[1]}`; 
                     }
+
+                    // Extrai hora padronizada para sorting
+                    let mHr = hRaw.match(/\d{2}:\d{2}/);
+                    let timeStr = mHr ? mHr[0] : "00:00";
+                    let dateTimeISO = dISO + "T" + timeStr;
 
                     let inspetor = String(r[4] || 'NÃO INFORMADO').trim().toUpperCase();
                     let veiculo = String(r[2] || '-').trim().toUpperCase();
@@ -389,61 +501,121 @@
                     let isEsteMes = (hoje.getMonth() === parseInt(partes[1]) - 1) && (hoje.getFullYear() === parseInt(partes[0]));
 
                     processadosInsp.push({
-                        data: dRaw, dataISO: dISO, mes: mes, inspetor: inspetor, veiculo: veiculo, filial: filial, 
-                        status: statusNorm, falhas: falhas, defeitoTextFull: defeitoBruto, solucao: solucao, os: osVinculada, diasAtras: diffDias, isEsteMes: isEsteMes
+                        data: dRaw, hora: hRaw, dataISO: dISO, dateTimeISO: dateTimeISO, mes: mes, inspetor: inspetor, 
+                        veiculo: veiculo, filial: filial, status: statusNorm, falhas: falhas, defeitoTextFull: defeitoBruto, 
+                        solucao: solucao, os: osVinculada, diasAtras: diffDias, isEsteMes: isEsteMes
                     });
                 }
             }
             inspecaoData = processadosInsp;
+            if(inspecaoData.length > 0) { popularMultiSelects(); updateDashboard(); }
+            else { document.getElementById('table-body').innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px;">Nenhum registro.</td></tr>`; }
+        }
 
-            if(inspecaoData.length > 0) { populateFilters(); updateDashboard(); }
-            else { 
-                document.getElementById('table-body').innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px;">Nenhum registro localizado.</td></tr>`;
+        // =========================================================================
+        // LÓGICA DE MULTI-SELECT E FILTROS LIGA/DESLIGA
+        // =========================================================================
+        function toggleDD(ddId) {
+            document.querySelectorAll('.dropdown-content').forEach(dd => { if(dd.id !== ddId) dd.style.display = 'none'; });
+            const dd = document.getElementById(ddId);
+            dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function popularMultiSelects() {
+            const getUniques = (key) => [...new Set(inspecaoData.map(i => (i[key] || '').toString().trim()))].filter(Boolean).sort();
+            
+            construirCaixaCheckboxes('mes', listaMeses);
+            construirCaixaCheckboxes('inspetor', getUniques('inspetor'));
+            construirCaixaCheckboxes('filial', getUniques('filial'));
+            construirCaixaCheckboxes('veiculo', getUniques('veiculo'));
+            construirCaixaCheckboxes('falhas', getUniques('falhas')); // VISTORIA OK agora volta para manter a tabela populada por padrão
+            construirCaixaCheckboxes('status', ['OK', 'ANOMALIA']);
+        }
+
+        function construirCaixaCheckboxes(id, arrayValores) {
+            const container = document.getElementById('list-' + id);
+            if (!container) return;
+
+            // Se for a primeira vez carregando, marca tudo no "Set" de estado
+            if (filterState[id].size === 0 && !container.dataset.loaded) {
+                arrayValores.forEach(v => filterState[id].add(v));
+                container.dataset.loaded = "true";
             }
+
+            let html = '';
+            arrayValores.forEach(v => {
+                let checked = filterState[id].has(v) ? 'checked' : '';
+                html += `<label class="option-item"><input type="checkbox" value="${v.replace(/"/g, '&quot;')}" ${checked} onchange="updateFiltroBox('${id}', this.value, this.checked)"> ${v}</label>`;
+            });
+            container.innerHTML = html;
+            atualizarTextoDD(id);
         }
 
-        function populateFilters() {
-            let fMes = document.getElementById('filter-mes').value;
-            let fInspetor = document.getElementById('filter-inspetor').value;
-            let fFilial = document.getElementById('filter-filial').value;
-            let fVeiculo = document.getElementById('filter-veiculo').value;
-            let fFalha = document.getElementById('filter-falha').value;
-            let fStatus = document.getElementById('filter-status').value;
-
-            const unique = (key) => [...new Set(inspecaoData.map(item => (item[key] || '').toString().trim()))].filter(Boolean).sort();
-            const fill = (id, arr, currentVal) => { 
-                let s = document.getElementById(id); s.innerHTML = '<option value="Tudo">Tudo</option>'; 
-                arr.forEach(v => s.innerHTML += `<option value="${v}">${v}</option>`); 
-                s.value = [...s.options].some(o => o.value === currentVal) ? currentVal : 'Tudo';
-            };
-
-            fill('filter-mes', listaMeses, fMes); 
-            fill('filter-inspetor', unique('inspetor'), fInspetor); 
-            fill('filter-filial', unique('filial'), fFilial); 
-            fill('filter-veiculo', unique('veiculo'), fVeiculo);
-            fill('filter-falha', unique('falhas').filter(f => f !== 'VISTORIA OK'), fFalha); 
-            fill('filter-status', ['OK', 'ANOMALIA'], fStatus);
+        function updateFiltroBox(id, val, isChecked) {
+            if (isChecked) filterState[id].add(val);
+            else filterState[id].delete(val);
+            atualizarTextoDD(id); maxTableRows = 100; updateDashboard();
         }
 
-        function setQuickFilter(mode, btn) {
-            maxTableRows = 100;
-            document.querySelectorAll('.btn-quick').forEach(b => b.classList.remove('active')); btn.classList.add('active');
-            currentDaysLimit = mode; updateDashboard();
+        function selectAll(id) {
+            const checkboxes = document.querySelectorAll(`#list-${id} input[type="checkbox"]`);
+            checkboxes.forEach(cb => { cb.checked = true; filterState[id].add(cb.value); });
+            atualizarTextoDD(id); maxTableRows = 100; updateDashboard();
         }
 
-        // FUNÇÃO DE TOGGLE: Se clicar no mesmo filtro, desmarca
-        function aplicarFiltroDropdown(comboId, valorClicado) {
-            let combo = document.getElementById(comboId);
-            if(combo) {
-                if (combo.value === valorClicado) {
-                    combo.value = 'Tudo';
+        function clearAll(id) {
+            const checkboxes = document.querySelectorAll(`#list-${id} input[type="checkbox"]`);
+            checkboxes.forEach(cb => { cb.checked = false; filterState[id].delete(cb.value); });
+            atualizarTextoDD(id); maxTableRows = 100; updateDashboard();
+        }
+
+        function atualizarTextoDD(id) {
+            const total = document.querySelectorAll(`#list-${id} input[type="checkbox"]`).length;
+            const sel = filterState[id].size;
+            document.getElementById('text-' + id).innerText = (sel === total || total === 0) ? 'Todos' : (sel === 0 ? 'Nenhum' : `${sel} selec.`);
+        }
+
+        // Drill-Down Rápido (Clica no gráfico: Se só ele estiver selecionado, limpa. Se não, seleciona só ele)
+        function aplicarFiltroDropdown(id, val) {
+            if(filterState[id]) {
+                if(filterState[id].size === 1 && filterState[id].has(val)) {
+                    selectAll(id); // Já estava selecionado, então "desliga" voltando ao normal (Todos)
                 } else {
-                    let optionExists = Array.from(combo.options).some(opt => opt.value === valorClicado);
-                    if (optionExists) combo.value = valorClicado;
+                    // Seleciona EXCLUSIVAMENTE o clicado
+                    const checkboxes = document.querySelectorAll(`#list-${id} input[type="checkbox"]`);
+                    filterState[id].clear();
+                    checkboxes.forEach(cb => {
+                        if (cb.value === val) { cb.checked = true; filterState[id].add(val); }
+                        else { cb.checked = false; }
+                    });
+                    atualizarTextoDD(id);
                 }
                 maxTableRows = 100; updateDashboard();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+        }
+
+        function setQuickFilter(mode, btn) {
+            document.querySelectorAll('.btn-quick').forEach(b => b.classList.remove('active')); 
+            if(btn) btn.classList.add('active');
+            currentDaysLimit = mode; 
+            maxTableRows = 100; updateDashboard();
+        }
+
+        function resetQuickFiltersAndUpdate() {
+            document.querySelectorAll('.btn-quick').forEach(b => b.classList.remove('active'));
+            currentDaysLimit = 'tudo'; // Period input takes over
+            maxTableRows = 100; updateDashboard();
+        }
+
+        function limparFiltrosGerais() {
+            // Zera as Datas
+            document.getElementById('filter-dtIni').value = '';
+            document.getElementById('filter-dtFim').value = '';
+            // Restaura o Botão Rápido para "Total"
+            setQuickFilter('tudo', document.getElementById('btn-quick-tudo'));
+            // Marca "Todos" em todas as caixas de seleção
+            ['mes', 'inspetor', 'filial', 'veiculo', 'falhas', 'status'].forEach(id => selectAll(id));
         }
         
         function toggleSort(col) { 
@@ -452,33 +624,62 @@
         
         function carregarMaisLinhas() { maxTableRows += 150; updateDashboard(); }
 
+        // =========================================================================
+        // MOTOR PRINCIPAL DO PAINEL
+        // =========================================================================
         function updateDashboard() {
             if (!inspecaoData.length) return;
             
-            const fMes = document.getElementById('filter-mes').value;
-            const fInspetor = document.getElementById('filter-inspetor').value;
-            const fFilial = document.getElementById('filter-filial').value;
-            const fVeiculo = document.getElementById('filter-veiculo').value;
-            const fFalha = document.getElementById('filter-falha').value;
-            const fStatus = document.getElementById('filter-status').value;
+            const dtIni = document.getElementById('filter-dtIni').value;
+            const dtFim = document.getElementById('filter-dtFim').value;
+
+            let tMes = document.querySelectorAll('#list-mes input[type="checkbox"]').length;
+            let tInsp = document.querySelectorAll('#list-inspetor input[type="checkbox"]').length;
+            let tFilial = document.querySelectorAll('#list-filial input[type="checkbox"]').length;
+            let tVeic = document.querySelectorAll('#list-veiculo input[type="checkbox"]').length;
+            let tFalhas = document.querySelectorAll('#list-falhas input[type="checkbox"]').length;
+            let tStatus = document.querySelectorAll('#list-status input[type="checkbox"]').length;
 
             let filteredInsp = inspecaoData.filter(item => {
-                let matchDays = true;
-                if(currentDaysLimit === '0') matchDays = (item.diasAtras === 0);
-                else if(currentDaysLimit === '1') matchDays = (item.diasAtras === 1);
-                else if(currentDaysLimit === '7') matchDays = (item.diasAtras <= 7);
-                else if(currentDaysLimit === '30') matchDays = item.isEsteMes;
+                let match = true;
+                
+                // Filtro Quick Days
+                if(currentDaysLimit === '0') { if(item.diasAtras !== 0) match = false; }
+                else if(currentDaysLimit === '1') { if(item.diasAtras !== 1) match = false; }
+                else if(currentDaysLimit === '7') { if(item.diasAtras > 7) match = false; }
+                else if(currentDaysLimit === '30') { if(!item.isEsteMes) match = false; }
 
-                return matchDays && (fMes === 'Tudo' || item.mes === fMes) && (fInspetor === 'Tudo' || item.inspetor === fInspetor) &&
-                       (fFilial === 'Tudo' || item.filial === fFilial) && (fVeiculo === 'Tudo' || item.veiculo === fVeiculo) &&
-                       (fFalha === 'Tudo' || item.falhas === fFalha) && (fStatus === 'Tudo' || item.status === fStatus);
+                // Filtro de Data Exata
+                if (dtIni && item.dataISO < dtIni) match = false;
+                if (dtFim && item.dataISO > dtFim) match = false;
+
+                // Filtros Multi-Select Rigorosos (Se as caixas carregaram e o set tá zerado, mostra nada)
+                if (tMes > 0 && filterState.mes.size === 0) match = false;
+                else if (filterState.mes.size < tMes && !filterState.mes.has(item.mes)) match = false;
+
+                if (tInsp > 0 && filterState.inspetor.size === 0) match = false;
+                else if (filterState.inspetor.size < tInsp && !filterState.inspetor.has(item.inspetor)) match = false;
+
+                if (tFilial > 0 && filterState.filial.size === 0) match = false;
+                else if (filterState.filial.size < tFilial && !filterState.filial.has(item.filial)) match = false;
+
+                if (tVeic > 0 && filterState.veiculo.size === 0) match = false;
+                else if (filterState.veiculo.size < tVeic && !filterState.veiculo.has(item.veiculo)) match = false;
+
+                if (tFalhas > 0 && filterState.falhas.size === 0) match = false;
+                else if (filterState.falhas.size < tFalhas && !filterState.falhas.has(item.falhas)) match = false;
+
+                if (tStatus > 0 && filterState.status.size === 0) match = false;
+                else if (filterState.status.size < tStatus && !filterState.status.has(item.status)) match = false;
+
+                return match;
             });
+
+            // Ordenação (Padrão: decrescente por Data+Hora ISO para ver a última vistoria no topo)
             filteredInsp.sort((a, b) => currentSort.desc ? b[currentSort.column].localeCompare(a[currentSort.column]) : a[currentSort.column].localeCompare(b[currentSort.column]));
             currentFilteredData = filteredInsp; 
 
-            // Cálculo dos Veículos Únicos
             let veiculosUnicos = new Set(filteredInsp.map(i => i.veiculo)).size;
-
             let conformes = 0, anomalias = 0, resolvidasLocal = 0;
             let equipeStats = {}, filialStats = {}, falhasStats = {};
 
@@ -514,18 +715,18 @@
                 let delay = (index % maxTableRows) * 0.003; 
                 let rowClass = item.status === 'ANOMALIA' ? 'fade-in sla-critical' : 'fade-in';
                 htmlTabela += `<tr class="${rowClass}" style="animation-delay: ${delay}s">
-                    <td>${item.data}</td><td><b>${item.inspetor}</b></td><td>${item.veiculo}</td>
+                    <td>${item.data}</td><td>${item.hora}</td><td><b>${item.inspetor}</b></td><td>${item.veiculo}</td>
                     <td>${item.filial}</td><td title="Detalhes do Defeito:\n${item.defeitoTextFull.replace(/"/g, '&quot;')}">${item.falhas}</td><td><b style="color:${sitColor}">${item.status}</b></td>
                 </tr>`;
             });
             if (filteredInsp.length > maxTableRows) {
                 let ocultos = filteredInsp.length - maxTableRows;
-                htmlTabela += `<tr><td colspan="6" style="text-align:center; padding:15px; background:transparent;"><button onclick="carregarMaisLinhas()" class="btn-quick active" style="padding:10px 30px;">Carregar Mais (${ocultos} ocultas)</button></td></tr>`;
+                htmlTabela += `<tr><td colspan="7" style="text-align:center; padding:15px; background:transparent;"><button onclick="carregarMaisLinhas()" class="btn-quick active" style="padding:10px 30px;">Carregar Mais (${ocultos} ocultas)</button></td></tr>`;
             }
-            document.getElementById('table-body').innerHTML = htmlTabela || `<tr><td colspan="6" style="text-align:center; padding:30px;">Nenhum registro encontrado para este filtro.</td></tr>`;
+            document.getElementById('table-body').innerHTML = htmlTabela || `<tr><td colspan="7" style="text-align:center; padding:30px;">Nenhum registro encontrado para este filtro.</td></tr>`;
 
             let topFalhasHtml = Object.keys(falhasStats).map(k => ({ name: k, count: falhasStats[k] })).sort((a, b) => b.count - a.count).slice(0, 5)
-                .map((f, i) => `<div class="defeito-item clickable" onclick="aplicarFiltroDropdown('filter-falha', '${f.name.replace(/'/g, "\\'")}')"><span>${i + 1}º - ${f.name}</span><span class="defeito-count">${f.count}x</span></div>`).join('');
+                .map((f, i) => `<div class="defeito-item clickable" onclick="aplicarFiltroDropdown('falhas', '${f.name.replace(/'/g, "\\'")}')"><span>${i + 1}º - ${f.name}</span><span class="defeito-count">${f.count}x</span></div>`).join('');
             document.getElementById('lista-defeitos').innerHTML = topFalhasHtml || '<div style="padding:20px;text-align:center;font-size:11px;color:var(--text-muted)">Sem anomalias.</div>';
 
             const buildBarList = (dataObj, icon, filterId) => {
@@ -539,16 +740,16 @@
                     </div>`;
                 }).join('');
             };
-            document.getElementById('lista-colaboradores').innerHTML = buildBarList(equipeStats, 'person', 'filter-inspetor') || '<div style="padding:20px;text-align:center;font-size:11px;color:var(--text-muted)">Sem dados.</div>';
-            document.getElementById('lista-filiais').innerHTML = buildBarList(filialStats, 'location_on', 'filter-filial') || '<div style="padding:20px;text-align:center;font-size:11px;color:var(--text-muted)">Sem dados.</div>';
+            document.getElementById('lista-colaboradores').innerHTML = buildBarList(equipeStats, 'person', 'inspetor') || '<div style="padding:20px;text-align:center;font-size:11px;color:var(--text-muted)">Sem dados.</div>';
+            document.getElementById('lista-filiais').innerHTML = buildBarList(filialStats, 'location_on', 'filial') || '<div style="padding:20px;text-align:center;font-size:11px;color:var(--text-muted)">Sem dados.</div>';
         }
 
         function exportarCSV() {
             if (!currentFilteredData.length) return alert("Não há dados.");
-            let csvContent = "Data;Inspetor;Veículo;Filial;Principais Falhas;Status\n";
+            let csvContent = "Data;Hora;Inspetor;Veículo;Filial;Principais Falhas;Status\n";
             currentFilteredData.forEach(item => {
                 let desc = item.falhas ? item.falhas.replace(/;/g, ',').replace(/\n/g, ' ') : '';
-                csvContent += `${item.data};${item.inspetor};${item.veiculo};${item.filial};"${desc}";${item.status}\n`;
+                csvContent += `${item.data};${item.hora};${item.inspetor};${item.veiculo};${item.filial};"${desc}";${item.status}\n`;
             });
             let blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
             let link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `Relatorio_RCR_${Date.now()}.csv`;
@@ -556,7 +757,7 @@
         }
         function abrirModalPDF() {
             const estruturaColunas = [
-                { id: 'data', label: 'Data' }, { id: 'inspetor', label: 'Inspetor' }, { id: 'veiculo', label: 'Veículo' },
+                { id: 'data', label: 'Data' }, { id: 'hora', label: 'Hora' }, { id: 'inspetor', label: 'Inspetor' }, { id: 'veiculo', label: 'Veículo' },
                 { id: 'filial', label: 'Filial' }, { id: 'falhas', label: 'Principais Falhas' }, { id: 'status', label: 'Status' }
             ];
             let html = '';
